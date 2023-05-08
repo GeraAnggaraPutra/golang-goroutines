@@ -1,0 +1,34 @@
+package golang_goroutines
+
+import (
+	"fmt"
+	"sync"
+	"testing"
+	"time"
+)
+
+func TestPool(t *testing.T) {
+	pool := sync.Pool{
+		// membuat data pool otomatis 
+		New: func() interface{} {
+			return "New"
+		},
+	}
+	
+
+	pool.Put("Gera")
+	pool.Put("Anggara")
+	pool.Put("Putra")
+
+	for i := 0; i < 10; i++ {
+		go func() {
+			data := pool.Get()
+			fmt.Println(data)
+			time.Sleep(1 * time.Second)
+			pool.Put(data)
+		}()
+	}
+
+	time.Sleep(3 * time.Second)
+	fmt.Println("Selesai")
+}
